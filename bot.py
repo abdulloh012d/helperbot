@@ -1,15 +1,15 @@
 import telebot
-from telebot import types
+from flask import Flask, request
 from config import BOT_TOKEN
 from weather import get_weather
 from currency import get_currency
 from scheduler import start_scheduler, subscribe_user, advices
 import random
 
-
 bot = telebot.TeleBot(BOT_TOKEN)
-
 start_scheduler(bot)
+
+app = Flask(__name__)
 
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
@@ -23,7 +23,8 @@ def send_help(message):
         "/help - Yordam\n"
         "/weather - Ob-havo\n"
         "/currency - Valyuta kurslari\n"
-        "/advice - Foydali maslahat\n"    )
+        "/advice - Foydali maslahat\n"
+    )
     bot.send_message(message.chat.id, help_text)
 
 @bot.message_handler(commands=['weather'])
@@ -48,5 +49,20 @@ def advice_handler(message):
 def unknown(message):
     bot.send_message(message.chat.id, "Kechirasiz, bu buyruqni tushunmadim. /help ni yozing.")
 
-print("Bot ishga tushdi...")
-bot.infinity_polling()
+@app.route('/' + BOT_TOKEN, methods=['POST'])
+def webhook():
+    json_str = request.get_data().decode('utf-8')
+    update = telebot.types.Update.de_json(json_str)
+    bot.process_new_updates([update])
+    return '', 200
+
+@app.route('/')
+def index():
+    return 'Bot ishlayapti!', 200
+
+if __name__ == '__main__':
+    import os
+    port = int(os.environ.get("PORT", 5000))
+    bot.remove_webhook()
+    bot.set_webhook(url=f"https://helperbot-gks4.onrender.com/{BOT_TOKEN}")
+    app.run(host="0.0.0.0", port=port)

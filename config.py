@@ -1,0 +1,5 @@
+import os
+
+BOT_TOKEN = os.getenv("7206608966:AAHTeNJnhPv5RJV8KSKFrS8oeB85CprNNmM")
+WEATHER_API_KEY = os.getenv("7126126775ed37f9825f5bddca18c4a9")
+EXCHANGE_API_KEY = os.getenv("283fb41ef42d47be8ca704d2")

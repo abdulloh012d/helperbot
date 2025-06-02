@@ -13,9 +13,7 @@ start_scheduler(bot)
 
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
-    bot.send_message(message.chat.id, f"Assalomu alaykum, {message.from_user.first_name}!\n"
-                                      f"Men sizga quyidagi xizmatlarni taklif qilaman:\n"
-                                      f"/help yozib batafsil bilib oling.")
+    bot.send_message(message.chat.id, f"Assalomu alaykum, {message.from_user.first_name}!")
     subscribe_user(message.chat.id)
 
 @bot.message_handler(commands=['help'])

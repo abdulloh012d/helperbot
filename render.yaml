@@ -2,9 +2,11 @@ services:
   - type: web
     name: helperbot
     env: python
-    plan: free
     buildCommand: pip install -r requirements.txt
     startCommand: python bot.py
     envVars:
-      - key: PYTHON_VERSION
-        value: 3.11
+      - key: RENDER_EXTERNAL_HOSTNAME
+        fromService:
+          type: web
+          name: helperbot
+          property: host
